@@ -2,48 +2,52 @@ import React from "react";
 
 const INPUT_CONFIGS = [
   {
-    label: "Attack",
-    stateKey: "attack",
-    type: "range",
-    values: [{ value: 0 }],
-    min: 0,
-    max: 3,
-    step: 0.01
+    label: "Type",
+    stateKey: "type",
+    type: "radio",
+    values: [
+      { value: "sine" },
+      { value: "square" },
+      { value: "triangle" },
+      { value: "sawtooth" }
+    ]
   },
   {
-    label: "Decay",
-    stateKey: "decay",
+    label: "Phase",
+    stateKey: "phase",
     type: "range",
     values: [{ value: 0 }],
     min: 0,
-    max: 3,
-    step: 0.01
+    max: 360,
+    step: 1
   },
   {
-    label: "Sustain",
-    stateKey: "sustain",
+    label: "Detune",
+    stateKey: "detune",
     type: "range",
     values: [{ value: 0 }],
     min: 0,
-    max: 1,
-    step: 0.01
+    max: 100,
+    step: 1,
+    setValue: true
   },
   {
-    label: "Release",
-    stateKey: "release",
+    label: "Frequency",
+    stateKey: "frequency",
     type: "range",
-    values: [{ value: 0 }],
-    min: 0,
-    max: 3,
-    step: 0.01
+    values: [{ value: 440 }],
+    min: 100,
+    max: 2000,
+    step: 10,
+    setValue: true
   }
 ];
 
 const initialState = {
-  attack: 0,
-  decay: 0,
-  sustain: 0,
-  release: 0
+  type: "sine",
+  phase: 0,
+  detune: 0,
+  frequency: 440
 };
 
 const containerStyles = {
@@ -54,7 +58,11 @@ const containerStyles = {
 };
 
 const reducer = (state, action = {}) => {
-  action.env[action.type] = action.stateKey;
+  if (action.setValue) {
+    action.osc[action.type].value = action.stateKey;
+  } else {
+    action.osc[action.type] = action.stateKey;
+  }
 
   return {
     ...state,
@@ -62,7 +70,7 @@ const reducer = (state, action = {}) => {
   };
 };
 
-const Envelope = props => {
+const Oscillator = props => {
   // eslint-disable-next-line
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
@@ -73,9 +81,11 @@ const Envelope = props => {
         stateKey,
         type,
         values = [],
+        checked = false,
         min = "",
         max = "",
-        step = ""
+        step = "",
+        setValue = false
       }) => (
         <div>
           <label htmlFor={stateKey}>
@@ -89,6 +99,7 @@ const Envelope = props => {
               name={stateKey}
               type={type}
               value={values.length > 1 ? item.value : state[stateKey]}
+              checked={item.value === state[stateKey]}
               min={min}
               max={max}
               step={step}
@@ -96,10 +107,10 @@ const Envelope = props => {
                 dispatch({
                   type: stateKey,
                   stateKey: e.currentTarget.value,
-                  env: props.env
+                  osc: props.osc,
+                  setValue: setValue
                 })
               }
-              style={{ display: "inline-block" }}
             />
           ))}
         </div>
@@ -108,10 +119,10 @@ const Envelope = props => {
 
   return (
     <div style={containerStyles}>
-      <h4>Envelope</h4>
+      <h4>Oscillator</h4>
       {renderInputs(INPUT_CONFIGS)}
     </div>
   );
 };
 
-export default Envelope;
+export default Oscillator;
