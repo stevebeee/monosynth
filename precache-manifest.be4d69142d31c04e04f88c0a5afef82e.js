@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ac8ec3cfee605d5dba04edf2a6ee788d",
+    "revision": "38ae15ec146ed8d1b4ea2c979cdcaf5e",
     "url": "/monosynth/index.html"
   },
   {
-    "revision": "5c6aa6762898ae489a3a",
-    "url": "/monosynth/static/css/main.5ecd60fb.chunk.css"
+    "revision": "286ba31ec87a9ed0734f",
+    "url": "/monosynth/static/css/main.d309ebe5.chunk.css"
   },
   {
     "revision": "70f2a1c347e092fdf389",
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/monosynth/static/js/2.0f3e5332.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "5c6aa6762898ae489a3a",
-    "url": "/monosynth/static/js/main.9adeb21f.chunk.js"
+    "revision": "286ba31ec87a9ed0734f",
+    "url": "/monosynth/static/js/main.8469cd5b.chunk.js"
   },
   {
     "revision": "1346df6cc561facb2a50",
