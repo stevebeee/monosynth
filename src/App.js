@@ -1,22 +1,33 @@
 import React from "react";
 import * as Tone from "tone";
-import Keyboard from "./Keyboard";
-import Envelope from "./Envelope";
-import Oscillator from "./Oscillator";
-import './App.css';
+import Container from "./Container";
+import ThemeContext from "./ThemeContext";
+import ThemeToggleButton from "./ThemeToggleButton";
+import ErrorMessage from "./ErrorMessage";
 
-function App() {
+const appContainerStyles = theme => {
+  return {
+    height: '100%',
+    backgroundColor: (theme === 'light' ? 'white' : 'black')
+  }
+} 
+
+const App = () => {
   const synth = new Tone.Synth().toMaster();
+  const [theme,setTheme] = React.useState('light');
+
+  const toggleTheme = () => {
+    theme === 'light' ? setTheme('dark') : setTheme('light');
+  }
 
   return (
-    <div>
-    <p id="widthMessage">Please use a desktop browser with a minimum width of 1000 pixels</p>
-    <div id="container">
-      <Oscillator osc={synth.oscillator} />
-      <Envelope env={synth.envelope} />
-      <Keyboard synth={synth} />
-    </div>
-    </div>
+    <ThemeContext.Provider value={theme}>
+      <div style={appContainerStyles(theme)}>
+        <ThemeToggleButton toggleTheme={() => toggleTheme()}/>
+        <ErrorMessage/>
+        <Container synth={synth}/>
+      </div>
+    </ThemeContext.Provider>
   );
 }
 

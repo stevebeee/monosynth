@@ -1,5 +1,6 @@
 import React from "react";
 import KEYBOARD from "./keyboardKeys";
+import ThemeContext from "./ThemeContext";
 
 const keyWidth = 20;
 const keyBorderWidth = 1;
@@ -13,34 +14,40 @@ const containerStyles = {
   margin: "100px auto 0px auto"
 };
 
-const keyStyles = {
-  display: "inline-block",
-  border: keyBorderWidth + "px solid #000",
-  height: "60px",
-  width: keyWidth + "px"
+const keyStyles = theme => {
+  return {
+    display: "inline-block",
+    border: keyBorderWidth + "px solid " + (theme === 'light' ? 'black' : 'white'),
+    height: "60px",
+    width: keyWidth + "px"
+  }
 };
 
-const sharpKeyStyles = {
-  backgroundColor: "#000",
-  margin:
-    "0px " +
-    keyMarginLeftRight +
-    "px " +
-    keyMarginTopBottom +
-    "px " +
-    keyMarginLeftRight +
-    "px"
+const sharpKeyStyles = theme =>{
+  return {
+    backgroundColor: theme === 'light' ? 'black' : 'white',
+    margin:
+      "0px " +
+      keyMarginLeftRight +
+      "px " +
+      keyMarginTopBottom +
+      "px " +
+      keyMarginLeftRight +
+      "px"
+  }
 };
 
-const naturalKeyStyles = {
-  backgroundColor: "#FFF",
-  margin:
-    keyMarginTopBottom +
-    "px " +
-    keyMarginLeftRight +
-    "px 0px " +
-    keyMarginLeftRight +
-    "px"
+const naturalKeyStyles = theme => {
+  return {
+    backgroundColor: theme === 'light' ? 'white' : 'black',
+    margin:
+      keyMarginTopBottom +
+      "px " +
+      keyMarginLeftRight +
+      "px 0px " +
+      keyMarginLeftRight +
+      "px"
+  }
 };
 
 const initialState = {
@@ -72,6 +79,7 @@ const reducer = (state, action = {}) => {
 const Keyboard = props => {
   // eslint-disable-next-line
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const context = ThemeContext;
 
   const renderKeys = (noteList = []) =>
     noteList.map(({ note }) => (
@@ -80,8 +88,8 @@ const Keyboard = props => {
         id={note}
         style={
           note.indexOf("#") > -1
-            ? { ...sharpKeyStyles, ...keyStyles }
-            : { ...naturalKeyStyles, ...keyStyles }
+            ? { ...sharpKeyStyles(context._currentValue), ...keyStyles(context._currentValue) }
+            : { ...naturalKeyStyles(context._currentValue), ...keyStyles(context._currentValue) }
         }
         onMouseDown={e =>
           dispatch({

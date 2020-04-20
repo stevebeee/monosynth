@@ -1,4 +1,5 @@
 import React from "react";
+import ThemeContext from "./ThemeContext";
 
 const INPUT_CONFIGS = [
   {
@@ -46,11 +47,14 @@ const initialState = {
   release: 0
 };
 
-const containerStyles = {
-  display: "inline-block",
-  width: "200px",
-  textAlign: "center",
-  margin: "100px auto 0px auto"
+const containerStyles = theme => {
+  return {
+    display: "inline-block",
+    width: "200px",
+    textAlign: "center",
+    margin: "100px auto 0px auto",
+    color: theme === 'light' ? 'black' : 'white'
+  }
 };
 
 const reducer = (state, action = {}) => {
@@ -65,6 +69,7 @@ const reducer = (state, action = {}) => {
 const Envelope = props => {
   // eslint-disable-next-line
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const context = ThemeContext;
 
   const renderInputs = (inputConfigs = []) =>
     inputConfigs.map(
@@ -107,7 +112,7 @@ const Envelope = props => {
     );
 
   return (
-    <div style={containerStyles}>
+    <div style={containerStyles(context._currentValue)}>
       <h4>Envelope</h4>
       {renderInputs(INPUT_CONFIGS)}
     </div>
