@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Clean existing docs directory
+rm -rf docs
+
 # Build the project
 npm run build
 
