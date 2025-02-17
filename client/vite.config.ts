@@ -6,8 +6,20 @@ export default defineConfig({
   plugins: [react()],
   base: '/monosynth/',
   build: {
-    outDir: 'dist/public',
-    assetsDir: 'assets',
+    outDir: '../docs',
     emptyOutDir: true,
-  }
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  define: {
+    'process.env.PUBLIC_URL': JSON.stringify('/monosynth'),
+  },
 });

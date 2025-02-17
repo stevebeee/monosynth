@@ -12,11 +12,17 @@ export default function WaveformDisplay() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Only proceed if analyser exists
+    if (!synth.analyser) return;
+
     const dataArray = new Uint8Array(synth.analyser.frequencyBinCount);
     
     const draw = () => {
       const width = canvas.width;
       const height = canvas.height;
+
+      // Only proceed if analyser exists
+      if (!synth.analyser) return;
       
       // Get waveform data
       synth.analyser.getByteTimeDomainData(dataArray);

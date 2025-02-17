@@ -8,6 +8,14 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { config } from './config';
 
+declare global {
+  interface Window {
+    env?: {
+      PROD?: boolean;
+    };
+  }
+}
+
 // Use base path for GitHub Pages compatibility
 const useBasePath = () => {
   const isProd = process.env.NODE_ENV === 'production' || import.meta.env.PROD || (window.env && window.env.PROD);
