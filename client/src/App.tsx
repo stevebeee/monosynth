@@ -4,14 +4,12 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
-
-// Get base path from environment or default to '/monosynth/'
-const base = '/monosynth/';
+import { config } from "./config";
 
 function Router() {
   return (
     // Use WouterRouter with base path configuration
-    <WouterRouter base={base}>
+    <WouterRouter base={config.basePath}>
       <Switch>
         <Route path="/" component={Home} />
         <Route component={NotFound} />

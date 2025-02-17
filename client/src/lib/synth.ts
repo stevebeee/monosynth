@@ -15,14 +15,16 @@ interface Effects {
 }
 
 class SynthEngine {
-  private audioContext: AudioContext;
+  private audioContext: AudioContext | null = null;
   private oscillators: Map<number, Oscillator> = new Map();
-  private mainGain: GainNode;
+  private mainGain: GainNode | null = null;
   private frequency: number = 440;
-  private effects: Effects;
-  public analyser: AnalyserNode;
+  private effects: Effects | null = null;
+  public analyser: AnalyserNode | null = null;
 
-  constructor() {
+  async initialize() {
+    if (this.audioContext) return; // Already initialized
+
     this.audioContext = new AudioContext();
     this.mainGain = this.audioContext.createGain();
     this.analyser = this.audioContext.createAnalyser();
@@ -50,9 +52,8 @@ class SynthEngine {
     this.effects.delayFeedback.gain.value = 0.4;
 
     // Set up reverb
-    this.createReverb().then(buffer => {
-      this.effects.reverb.buffer = buffer;
-    });
+    const buffer = await this.createReverb();
+    this.effects.reverb.buffer = buffer;
     this.effects.reverbGain.gain.value = 0.3;
 
     // Connect effects chain
@@ -70,6 +71,8 @@ class SynthEngine {
   }
 
   private async createReverb(): Promise<AudioBuffer> {
+    if (!this.audioContext) throw new Error('AudioContext not initialized');
+
     const length = 2;
     const decay = 2;
     const sampleRate = this.audioContext.sampleRate;
@@ -88,30 +91,38 @@ class SynthEngine {
   }
 
   setMainVolume(volume: number) {
+    if (!this.mainGain) return;
     this.mainGain.gain.value = volume;
   }
 
   setFilterFrequency(frequency: number) {
+    if (!this.effects) return;
     this.effects.filter.frequency.value = frequency;
   }
 
   setFilterResonance(resonance: number) {
+    if (!this.effects) return;
     this.effects.filter.Q.value = resonance;
   }
 
   setDelayTime(time: number) {
+    if (!this.effects) return;
     this.effects.delay.delayTime.value = time;
   }
 
   setDelayFeedback(feedback: number) {
+    if (!this.effects) return;
     this.effects.delayFeedback.gain.value = feedback;
   }
 
   setReverbMix(mix: number) {
+    if (!this.effects) return;
     this.effects.reverbGain.gain.value = mix;
   }
 
   addOscillator(id: number, waveform: WaveformType, volume: number) {
+    if (!this.audioContext || !this.mainGain) return;
+
     const oscillator = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
 
@@ -144,6 +155,8 @@ class SynthEngine {
   }
 
   setOscillatorWaveform(id: number, waveform: WaveformType) {
+    if (!this.audioContext) return;
+
     const osc = this.oscillators.get(id);
     if (osc) {
       const newOscillator = this.audioContext.createOscillator();
@@ -169,24 +182,30 @@ class SynthEngine {
     return A4 * Math.pow(2, (octave - 4) + (semitone - 9) / 12);
   }
 
-  playNote(note: string) {
+  async playNote(note: string) {
+    if (!this.audioContext) {
+      await this.initialize();
+    }
+
     this.stopNote();
 
     this.frequency = this.noteToFrequency(note);
     this.oscillators.forEach((osc) => {
-      osc.oscillator.frequency.setValueAtTime(this.frequency, this.audioContext.currentTime);
+      osc.oscillator.frequency.setValueAtTime(this.frequency, this.audioContext!.currentTime);
       osc.oscillator.start();
       osc.isPlaying = true;
     });
   }
 
   stopNote() {
+    if (!this.audioContext) return;
+
     this.oscillators.forEach((osc) => {
       if (osc.isPlaying) {
         osc.oscillator.stop();
 
         // Create a new oscillator for next note
-        const newOscillator = this.audioContext.createOscillator();
+        const newOscillator = this.audioContext!.createOscillator();
         newOscillator.type = osc.oscillator.type;
         newOscillator.connect(osc.gain);
 
@@ -196,11 +215,13 @@ class SynthEngine {
       }
     });
   }
+
   async togglePlayback(isPlaying: boolean) {
     if (isPlaying) {
-      await this.audioContext.resume();
+      await this.initialize();
+      await this.audioContext?.resume();
     } else {
-      await this.audioContext.suspend();
+      await this.audioContext?.suspend();
     }
   }
 }
