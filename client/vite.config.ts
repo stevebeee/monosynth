@@ -10,16 +10,16 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
-      },
-    },
+        manualChunks: undefined
+      }
+    }
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-  define: {
-    'process.env.PUBLIC_URL': JSON.stringify('/monosynth'),
-  },
+  server: {
+    port: 5000
+  }
 });

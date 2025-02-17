@@ -1,11 +1,11 @@
 {
-    "name": "monosynth-client",
-    "private": true,
-    "version": "1.0.0",
-    "type": "module",
-    "scripts": {
-      "dev": "vite",
-      "build": "tsc && vite build",
-      "preview": "vite preview"
-    }
+  "name": "monosynth",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   }
+}
