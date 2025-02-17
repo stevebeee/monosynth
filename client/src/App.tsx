@@ -10,15 +10,29 @@ import { config } from './config';
 
 // Use base path for GitHub Pages compatibility
 const useBasePath = () => {
-  const base = config.basePath;
+  const isProd = process.env.NODE_ENV === 'production' || import.meta.env.PROD || (window.env && window.env.PROD);
+  const base = isProd ? '/monosynth' : '';
+
+  console.debug('[Router] Using base path:', base);
+  console.debug('[Router] Environment:', {
+    isProd,
+    base,
+    origin: window.location.origin,
+    pathname: window.location.pathname
+  });
+
   return {
     base,
-    makeHref: (path: string) => config.getRoutePath(path),
+    makeHref: (path: string) => {
+      const href = `${base}${path}`.replace(/\/+/g, '/');
+      console.debug('[Router] Generated href:', { path, href });
+      return href;
+    },
   };
 };
 
 function Router() {
-  const { base } = useBasePath();
+  const { base, makeHref } = useBasePath();
 
   return (
     <WouterRouter base={base}>

@@ -1,18 +1,23 @@
 // Configuration for different environments
 export const config = {
   // Base path for the application
-  basePath: import.meta.env.PROD ? '/monosynth' : '',
+  basePath: process.env.NODE_ENV === 'production' || import.meta.env.PROD ? '/monosynth' : '',
 
   // Function to get the correct asset path
   getAssetPath: (path: string) => {
-    const base = import.meta.env.PROD ? '/monosynth' : '';
-    return `${base}${path.startsWith('/') ? path : `/${path}`}`;
+    // In production, always use /monosynth base path
+    const base = process.env.NODE_ENV === 'production' || import.meta.env.PROD ? '/monosynth' : '';
+    // Remove any leading slashes and combine with base
+    const cleanPath = path.replace(/^\/+/, '');
+    return `${base}/${cleanPath}`;
   },
 
   // Function to get the correct route path
   getRoutePath: (path: string) => {
-    const base = import.meta.env.PROD ? '/monosynth' : '';
-    const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    return `${base}${cleanPath}`;
+    // In production, always use /monosynth base path
+    const base = process.env.NODE_ENV === 'production' || import.meta.env.PROD ? '/monosynth' : '';
+    // Remove any leading slashes and combine with base
+    const cleanPath = path.replace(/^\/+/, '');
+    return `${base}/${cleanPath}`;
   }
 };
