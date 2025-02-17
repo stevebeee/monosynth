@@ -5,7 +5,7 @@ npm run build
 mkdir -p docs
 
 ## Copy the contents of dist/public to docs folder
-cp -r dist/public/* docs/
+cp -r dist/* docs/
 
 ## Create a .nojekyll file to prevent GitHub Pages from ignoring files that begin with an underscore
 touch docs/.nojekyll
@@ -25,7 +25,7 @@ touch docs/.nojekyll
 ## Common Issues
 
 If you see 404 errors for assets:
-1. Make sure all files were copied to the docs folder
+1. Make sure all files were copied to the docs folder correctly
 2. Verify the .nojekyll file exists in the docs folder
 3. Check that GitHub Pages is configured to serve from the docs folder
 4. Clear your browser cache and reload the page
