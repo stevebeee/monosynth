@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   base: '/monosynth/',
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets'
+    outDir: 'dist/public',
+    assetsDir: 'assets',
+    emptyOutDir: true,
   }
 });
