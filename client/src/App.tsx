@@ -4,23 +4,24 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { config } from './config';
 
 // Use base path for GitHub Pages compatibility
-const getBasePath = () => {
-  // Check if we're in production
-  if (import.meta.env.PROD) {
-    // For GitHub Pages deployment
-    const path = window.location.pathname;
-    const base = path.split('/')[1]; // Get 'monosynth' from the path
-    return base ? `/${base}` : '';
-  }
-  return '';
+const useBasePath = () => {
+  const base = config.basePath;
+  return {
+    base,
+    makeHref: (path: string) => config.getRoutePath(path),
+  };
 };
 
 function Router() {
+  const { base } = useBasePath();
+
   return (
-    // Use WouterRouter with base path configuration
-    <WouterRouter base={getBasePath()}>
+    <WouterRouter base={base}>
       <Switch>
         <Route path="/" component={Home} />
         <Route component={NotFound} />
@@ -32,8 +33,10 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <Provider store={store}>
+        <Router />
+        <Toaster />
+      </Provider>
     </QueryClientProvider>
   );
 }
