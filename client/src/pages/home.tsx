@@ -40,7 +40,7 @@ export default function Home() {
                 <Button 
                   size="lg"
                   onClick={handleInitialize}
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Initialize Synthesizer
                 </Button>

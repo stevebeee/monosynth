@@ -10,7 +10,8 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined
+        manualChunks: undefined,
+        assetFileNames: 'assets/[name]-[hash][extname]'
       }
     }
   },
@@ -20,6 +21,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5000
+    port: 3000,
+    host: true // This allows the server to be accessible from other devices on the network
   }
 });
